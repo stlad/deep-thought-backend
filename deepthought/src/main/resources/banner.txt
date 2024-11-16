@@ -4,5 +4,5 @@
 |  '--'  /\   --.\   --.| '-' '  |  |   |  | |  |' '-' '  ''  ' '-' '|  | |  |  |  |
 `-------'  `----' `----'|  |-'   `--'   `--' `--' `---' `----'.`-  / `--' `--'  `--'
                         `--'                                  `---'
-Developed By: Vaganov V., Baranova A.
+Developed By: Vaganov VS, Baranova AA
 Powered by Spring Boot ${spring-boot.version}
