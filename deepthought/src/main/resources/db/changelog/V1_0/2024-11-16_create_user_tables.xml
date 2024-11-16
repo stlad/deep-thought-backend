@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="Создание таблицы t_user" author="Vaganov.VS">
+        <createTable tableName="t_user" remarks="Аккаунт пользователя">
+            <column name="id" type="uuid" remarks="ID записи">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="login" type="varchar(255)" remarks="Уникальный логин пользователя">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar" remarks="Пароль пользователя"/>
+            <column name="registered_at" type="datetime" remarks="Дата-время регистрации"/>
+            <column name="is_restricted" type="bool" remarks="Аккаунт приостановлен, флаг"/>
+            <column name="is_deleted" type="bool" remarks="Аккаунт удален, флаг"/>
+
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="Создание таблицы t_user_info" author="Vaganov.VS">
+        <createTable tableName="t_user_info" remarks="Профиль пользователя">
+            <column name="id" type="uuid" remarks="ID записи">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="about" type="varchar" remarks="Поле о себе"/>
+            <column name="first_name" type="varchar(100)" remarks="Имя"/>
+            <column name="last_name" type="varchar(100)" remarks="Фамилия"/>
+            <column name="middle_name" type="varchar(100)" remarks="Отчество"/>
+            <column name="status" type="varchar(255)" remarks="Статус"/>
+            <column name="avatar" type="varchar" remarks="Аватарка"/>
+            <column name="link_user" type="uuid" remarks="ID Пользователя"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="t_user_info"
+                                 baseColumnNames="link_user"
+                                 constraintName="user_info__to__user__fk"
+                                 referencedTableName="t_user"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <!--        Добавим индекс на поле link_user с внешним ключем, поскольку по этому полю часто будет join-->
+        <createIndex tableName="t_user_info" indexName="user_info__link_user__index">
+            <column name="link_user"></column>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
