@@ -48,6 +48,7 @@ public class User {
         Objects.requireNonNull(login, "Логин является обязательным полем");
         this.login = login;
         this.password = password;
+        this.email = email;
         this.registeredAt = LocalDateTime.now();
         this.isDeleted = false;
         this.isRestricted = false;
