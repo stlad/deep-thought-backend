@@ -5,71 +5,71 @@
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="Create table t_chat" author="Baranova.AA">
-        <createTable tableName="t_chat" remarks="Chat">
-            <column name="id" type="uuid" remarks="Record ID">
+        <createTable tableName="t_chat" remarks="Чат">
+            <column name="id" type="uuid" remarks="ID Записи">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="title" type="varchar(255)" remarks="chat title"/>
-            <column name="created_at" type="datetime" remarks="Chat creation time"/>
+            <column name="title" type="varchar(255)" remarks="Название чата"/>
+            <column name="created_at" type="datetime" remarks="Время создания чата"/>
         </createTable>
     </changeSet>
 
     <changeSet id="Create table t_message" author="Baranova.AA">
-        <createTable tableName="t_message" remarks="Message">
-            <column name="id" type="uuid" remarks="Record ID">
+        <createTable tableName="t_message" remarks="Сообщение">
+            <column name="id" type="uuid" remarks="ID Записи">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="author_id" type="uuid" remarks="Id of the message author"/>
+            <column name="link_author" type="uuid" remarks="ID автора сообщения"/>
             <column name="posted_at" type="timestamp" remarks="Datetime of message creation"/>
-            <column name="chat_id" type="uuid" remarks="Id of the chat where message was posted"/>
+            <column name="link_chat" type="uuid" remarks="ID чата, где сообщение было опубликовано"/>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="t_message"
-                                 baseColumnNames="author_id"
+                                 baseColumnNames="link_author"
                                  constraintName="message__to__user__fk"
                                  referencedTableName="t_user"
                                  referencedColumnNames="id"
                                  onDelete="SET NULL"/>
 
         <addForeignKeyConstraint baseTableName="t_message"
-                                 baseColumnNames="chat_id"
+                                 baseColumnNames="link_chat"
                                  constraintName="message__to__chat__fk"
                                  referencedTableName="t_chat"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"/> 
 
         <createIndex tableName="t_message" indexName="t_message_chat__index">
-            <column name="chat_id"/>
+            <column name="link_chat"/>
         </createIndex>
     </changeSet>
 
    <changeSet id="Create table t_chat_member_info" author="Baranova.AA">
-        <createTable tableName="t_chat_member_info" remarks="Chat participant info">
-            <column name="id" type="uuid" remarks="Record ID">
+        <createTable tableName="t_chat_member_info" remarks="Участник чата">
+            <column name="id" type="uuid" remarks="ID Записи">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="chat_id" type="uuid" remarks="Id of the chat"/>
-            <column name="user_id" type="uuid" remarks="Id of the user"/>
-            <column name="chat_role" type="varchar" remarks="Members role in the current chat"/>
-            <column name="joined_at" type="datetime" remarks="Datetime when user joined the chat"/>
+            <column name="link_chat" type="uuid" remarks="ID Чата"/>
+            <column name="link_user" type="uuid" remarks="ID Пользователя"/>
+            <column name="chat_role" type="varchar" remarks="Роль пользователя в чате"/>
+            <column name="joined_at" type="datetime" remarks="Дата, когда пользователь присоединился к чату"/>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="t_chat_member_info"
-                                 baseColumnNames="user_id"
+                                 baseColumnNames="link_user"
                                  constraintName="chat_member_info__to__user__fk"
                                  referencedTableName="t_user"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"/>
 
         <addForeignKeyConstraint baseTableName="t_chat_member_info"
-                                 baseColumnNames="chat_id"
+                                 baseColumnNames="link_chat"
                                  constraintName="chat_member_info__to__chat__fk"
                                  referencedTableName="t_chat"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"/>
 
         <createIndex tableName="t_chat_member_info" indexName="t_chat_member_info__index">
-            <column name="chat_id"/>
+            <column name="link_chat"/>
         </createIndex>
 
     </changeSet>
