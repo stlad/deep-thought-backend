@@ -4,24 +4,8 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="Создание таблицы t_user" author="Vaganov.VS">
-        <createTable tableName="t_user" remarks="Аккаунт пользователя">
-            <column name="id" type="uuid" remarks="ID записи">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="login" type="varchar(255)" remarks="Уникальный логин пользователя">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="password" type="varchar" remarks="Пароль пользователя"/>
-            <column name="registered_at" type="datetime" remarks="Дата-время регистрации"/>
-            <column name="is_restricted" type="bool" remarks="Аккаунт приостановлен, флаг"/>
-            <column name="is_deleted" type="bool" remarks="Аккаунт удален, флаг"/>
-
-        </createTable>
-    </changeSet>
-
-    <changeSet id="Создание таблицы t_user_info" author="Vaganov.VS">
-        <createTable tableName="t_user_info" remarks="Профиль пользователя">
+    <changeSet id="Создание таблицы t_user_profile" author="Vaganov.VS">
+        <createTable tableName="t_user_profile" remarks="Профиль пользователя">
             <column name="id" type="uuid" remarks="ID записи">
                 <constraints primaryKey="true"/>
             </column>
@@ -31,20 +15,35 @@
             <column name="middle_name" type="varchar(100)" remarks="Отчество"/>
             <column name="status" type="varchar(255)" remarks="Статус"/>
             <column name="avatar" type="varchar" remarks="Аватарка"/>
-            <column name="link_user" type="uuid" remarks="ID Пользователя"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="Создание таблицы t_user" author="Vaganov.VS">
+        <createTable tableName="t_user" remarks="Аккаунт пользователя">
+            <column name="id" type="uuid" remarks="ID записи">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="login" type="varchar(255)" remarks="Уникальный логин пользователя">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar" remarks="Пароль пользователя"/>
+            <column name="email" type="varchar" remarks="Почта пользователя"/>
+            <column name="registered_at" type="datetime" remarks="Дата-время регистрации"/>
+            <column name="is_restricted" type="bool" remarks="Аккаунт приостановлен, флаг" defaultValue="false"/>
+            <column name="is_deleted" type="bool" remarks="Аккаунт удален, флаг" defaultValue="false"/>
+            <column name="link_user_profile" type="uuid" remarks="ID записи о профиле пользователя"/>
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="t_user_info"
-                                 baseColumnNames="link_user"
-                                 constraintName="user_info__to__user__fk"
-                                 referencedTableName="t_user"
+        <addForeignKeyConstraint baseTableName="t_user"
+                                 baseColumnNames="link_user_profile"
+                                 constraintName="user__to__user_profile__fk"
+                                 referencedTableName="t_user_profile"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"/>
 
-        <!--        Добавим индекс на поле link_user с внешним ключем, поскольку по этому полю часто будет join-->
-        <createIndex tableName="t_user_info" indexName="user_info__link_user__index">
-            <column name="link_user"/>
+        <!--Добавим индекс на поле link_user с внешним ключем, поскольку по этому полю часто будет join-->
+        <createIndex tableName="t_user" indexName="user__link_user_profile__index">
+            <column name="link_user_profile"/>
         </createIndex>
     </changeSet>
-
 </databaseChangeLog>
