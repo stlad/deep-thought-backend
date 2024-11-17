@@ -12,8 +12,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "t_user_info")
-public class UserInfo {
+@Table(name = "t_user_profile")
+public class UserProfile {
     @Id
     @GeneratedValue
     @UuidGenerator
@@ -28,12 +28,12 @@ public class UserInfo {
     private String about;
 
     private String status;
+
     /**
      * Навание файла с аватаркой вользователя
      */
     private String avatar;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "link_user", referencedColumnName = "id")
+    @OneToOne(mappedBy = "profile", cascade = CascadeType.ALL)
     private User user;
 }

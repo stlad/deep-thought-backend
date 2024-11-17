@@ -23,6 +23,8 @@ public class User {
 
     private String login;
 
+    private String email;
+
     private String password;
 
     private LocalDateTime registeredAt;
@@ -37,17 +39,19 @@ public class User {
      */
     private Boolean isDeleted;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
-    private UserInfo info;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "link_user_profile", referencedColumnName = "id")
+    private UserProfile profile;
 
     @Builder
-    public User(String login, String password){
+    public User(String login, String password, String email){
         Objects.requireNonNull(login, "Логин является обязательным полем");
         this.login = login;
         this.password = password;
         this.registeredAt = LocalDateTime.now();
-        this.info = UserInfo.builder()
-                .user(this)
+        this.isDeleted = false;
+        this.isRestricted = false;
+        this.profile = UserProfile.builder()
                 .build();
     }
 }
