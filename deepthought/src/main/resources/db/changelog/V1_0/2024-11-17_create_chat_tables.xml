@@ -51,7 +51,7 @@
             </column>
             <column name="link_chat" type="uuid" remarks="ID Чата"/>
             <column name="link_user" type="uuid" remarks="ID Пользователя"/>
-            <column name="chat_role" type="varchar" remarks="Роль пользователя в чате"/>
+            <column name="chat_role" type="tinyint" remarks="Роль пользователя в чате"/>
             <column name="joined_at" type="datetime" remarks="Дата, когда пользователь присоединился к чату"/>
         </createTable>
 

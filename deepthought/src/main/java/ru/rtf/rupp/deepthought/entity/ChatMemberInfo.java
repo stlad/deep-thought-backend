@@ -15,14 +15,12 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "t_chat_member_info")
 public class ChatMemberInfo {
@@ -40,9 +38,17 @@ public class ChatMemberInfo {
     @JoinColumn(name = "link_chat")
     private Chat chat;
 
-    private String chat_role;
+    private ChatRole chat_role;
 
     private LocalDateTime joined_at;
+
+    @Builder
+    public ChatMemberInfo(User user, Chat chat){
+        this.chat = chat;
+        this.user = user;
+        this.chat_role = ChatRole.USER;
+        this.joined_at = LocalDateTime.now();
+    }
 
     
 }

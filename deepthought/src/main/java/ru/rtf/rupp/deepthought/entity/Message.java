@@ -3,8 +3,9 @@ package ru.rtf.rupp.deepthought.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.hibernate.annotations.ManyToAny;
 import org.hibernate.annotations.UuidGenerator;
+import org.mapstruct.control.MappingControl.Use;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -15,12 +16,14 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Getter
 @Setter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
+@AllArgsConstructor()
 @Entity
 @Table(name = "t_message")
 public class Message {
@@ -38,12 +41,15 @@ public class Message {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "link_chat")
+    @JoinColumn(name = "link_chat", nullable = false)
     private Chat chat;
 
     @Builder
-    public Message(String Content){
+    public Message(String Content, User user, Chat chat){
         this.Content = Content;
+        this.posted_at = LocalDateTime.now();
+        this.chat = chat;
+        this.user = user;
 
     }
 

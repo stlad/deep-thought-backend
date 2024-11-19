@@ -23,6 +23,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Entity
