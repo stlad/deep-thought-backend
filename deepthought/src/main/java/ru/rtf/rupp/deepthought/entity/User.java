@@ -41,9 +41,6 @@ public class User {
     private Boolean isDeleted;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Message> messages;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ChatMemberInfo> members_info;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

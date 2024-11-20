@@ -8,6 +8,8 @@ import ru.rtf.rupp.deepthought.enums.ChatRole;
 
 import org.hibernate.annotations.UuidGenerator;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -39,6 +41,7 @@ public class ChatMemberInfo {
     @JoinColumn(name = "link_chat")
     private Chat chat;
 
+    @Enumerated(EnumType.ORDINAL)
     private ChatRole chatRole;
 
     private LocalDateTime joinedAt;
