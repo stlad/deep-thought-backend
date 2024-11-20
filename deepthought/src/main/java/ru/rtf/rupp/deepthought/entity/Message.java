@@ -34,7 +34,7 @@ public class Message {
 
     private String Content;
 
-    private LocalDateTime posted_at;
+    private LocalDateTime postedAt;
 
     @ManyToOne
     @JoinColumn(name = "link_author", nullable = true)
@@ -47,7 +47,7 @@ public class Message {
     @Builder
     public Message(String Content, User user, Chat chat){
         this.Content = Content;
-        this.posted_at = LocalDateTime.now();
+        this.postedAt = LocalDateTime.now();
         this.chat = chat;
         this.user = user;
 

@@ -4,8 +4,9 @@ package ru.rtf.rupp.deepthought.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.hibernate.annotations.UuidGenerator;
+import ru.rtf.rupp.deepthought.enums.ChatRole;
 
+import org.hibernate.annotations.UuidGenerator;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -38,16 +39,16 @@ public class ChatMemberInfo {
     @JoinColumn(name = "link_chat")
     private Chat chat;
 
-    private ChatRole chat_role;
+    private ChatRole chatRole;
 
-    private LocalDateTime joined_at;
+    private LocalDateTime joinedAt;
 
     @Builder
     public ChatMemberInfo(User user, Chat chat){
         this.chat = chat;
         this.user = user;
-        this.chat_role = ChatRole.USER;
-        this.joined_at = LocalDateTime.now();
+        this.chatRole = ChatRole.MEMBER;
+        this.joinedAt = LocalDateTime.now();
     }
 
     

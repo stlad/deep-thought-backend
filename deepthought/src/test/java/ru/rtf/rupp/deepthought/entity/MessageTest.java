@@ -28,7 +28,7 @@ class MessageTest extends BaseContextTest {
 
         Assertions.assertNotNull(message.getContent());
         Assertions.assertNotNull(message.getUser());
-        Assertions.assertNotNull(message.getPosted_at());
+        Assertions.assertNotNull(message.getPostedAt());
         Assertions.assertNotNull(message.getChat());
         
     }

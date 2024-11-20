@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.rtf.rupp.deepthought.BaseContextTest;
+import ru.rtf.rupp.deepthought.enums.ChatRole;
 
 public class ChatMemberInfoTest extends BaseContextTest {
     
@@ -25,9 +26,9 @@ public class ChatMemberInfoTest extends BaseContextTest {
                                         .user(user)
                                         .build();
         Assertions.assertNotNull(chatMemberInfo.getUser());
-        Assertions.assertNotNull(chatMemberInfo.getJoined_at());
+        Assertions.assertNotNull(chatMemberInfo.getJoinedAt());
         Assertions.assertNotNull(chatMemberInfo.getChat());
-        Assertions.assertEquals(chatMemberInfo.getChat_role(), ChatRole.USER);
+        Assertions.assertEquals(chatMemberInfo.getChatRole(), ChatRole.MEMBER);
 
         }
 }

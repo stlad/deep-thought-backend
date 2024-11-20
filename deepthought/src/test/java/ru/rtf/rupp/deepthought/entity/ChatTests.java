@@ -15,7 +15,7 @@ class ChatTests extends BaseContextTest {
                 .build();
 
         Assertions.assertNotNull(chat.getTitle());
-        Assertions.assertNotNull(chat.getCreated_at());
+        Assertions.assertNotNull(chat.getCreatedAt());
     }
 
     

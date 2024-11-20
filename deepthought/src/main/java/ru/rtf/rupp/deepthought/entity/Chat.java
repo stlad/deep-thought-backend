@@ -37,7 +37,7 @@ public class Chat {
 
     private String title;
 
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
     private List<Message> messages;
@@ -48,7 +48,7 @@ public class Chat {
     @Builder
     public Chat(String title){
         this.title = title;
-        this.created_at = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
 
     }
 
