@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -38,6 +39,9 @@ public class User {
      * Флаг удаленности
      */
     private Boolean isDeleted;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ChatMemberInfo> members_info;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "link_user_profile", referencedColumnName = "id")
