@@ -21,7 +21,7 @@ class MessageTest extends BaseContextTest {
             .build();
 
         Message message = Message.builder()
-            .Content("Some test text")
+            .content("Some test text")
             .chat(chat)
             .user(user)
             .build();

@@ -23,7 +23,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Entity
@@ -49,7 +48,6 @@ public class Chat {
     public Chat(String title){
         this.title = title;
         this.createdAt = LocalDateTime.now();
-
     }
 
     
