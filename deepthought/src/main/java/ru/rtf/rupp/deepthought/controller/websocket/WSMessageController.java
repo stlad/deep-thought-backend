@@ -6,6 +6,9 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import ru.rtf.rupp.deepthought.dto.MessageDto;
 import ru.rtf.rupp.deepthought.entity.Message;
 
 import java.util.UUID;
@@ -17,9 +20,10 @@ public class WSMessageController {
     private final SimpMessagingTemplate messagingTemplate;
 
 
-    @MessageMapping("/chat/{chatId}")
-    public void process(UUID chatID, @Payload Message message){
-        log.info("Сообщение в чат {}", chatID);
+    @MessageMapping("/broker")
+    public void process(@Payload MessageDto message){
+        log.info("Сообщение в чат {}", message);
+
 
     }
 }
