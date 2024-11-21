@@ -13,7 +13,6 @@ import org.hibernate.annotations.UuidGenerator;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
