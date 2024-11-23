@@ -9,8 +9,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.rtf.rupp.deepthought.dto.UserDTO;
 import ru.rtf.rupp.deepthought.dto.UserRegistrationDTO;
 import ru.rtf.rupp.deepthought.entity.User;
+import ru.rtf.rupp.deepthought.mapper.UserMapper;
 import ru.rtf.rupp.deepthought.repository.UserRepository;
 
 @Slf4j
@@ -19,19 +21,20 @@ import ru.rtf.rupp.deepthought.repository.UserRepository;
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Transactional
-    public User saveUser(UserRegistrationDTO dto) {
+    public UserDTO saveUser(UserRegistrationDTO dto) {
         if (userRepository.existsByLoginOrEmail(dto.getLogin(), dto.getEmail())) {
             throw new EntityNotFoundException("Пользователь таким логином или почтой уже зарегистрирован ");
-        };
+        }
         User user = User.builder()
                 .email(dto.getEmail())
                 .login(dto.getLogin())
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .build();
         user = userRepository.save(user);
-        return user;
+        return userMapper.toDTO(user);
     }
 
     @Override

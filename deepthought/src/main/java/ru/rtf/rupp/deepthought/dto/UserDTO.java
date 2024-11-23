@@ -14,8 +14,6 @@ public class UserDTO {
     @Schema(description = "Почта")
     private String email;
 
-    @Schema(description = "Пароль")
-    private String password;
-
+    @Schema(description = "Профиль пользователя")
     private UserProfileDTO userProfile;
 }
