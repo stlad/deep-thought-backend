@@ -28,4 +28,11 @@ public class AuthController {
         UserDTO user = userService.saveUser(dto);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    @PostMapping("/login")
+    @Operation(summary = "Получение пользователя")
+    public ResponseEntity<UserDTO> login(@RequestBody UserRegistrationDTO dto){
+        UserDTO user = userService.login(dto);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 }

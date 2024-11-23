@@ -1,9 +1,10 @@
 package ru.rtf.rupp.deepthought.service;
 
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,6 +15,8 @@ import ru.rtf.rupp.deepthought.dto.UserRegistrationDTO;
 import ru.rtf.rupp.deepthought.entity.User;
 import ru.rtf.rupp.deepthought.mapper.UserMapper;
 import ru.rtf.rupp.deepthought.repository.UserRepository;
+
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -26,7 +29,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserDTO saveUser(UserRegistrationDTO dto) {
         if (userRepository.existsByLoginOrEmail(dto.getLogin(), dto.getEmail())) {
-            throw new EntityNotFoundException("Пользователь таким логином или почтой уже зарегистрирован ");
+            throw new EntityExistsException("Пользователь таким логином или почтой уже зарегистрирован ");
         }
         User user = User.builder()
                 .email(dto.getEmail())
@@ -34,6 +37,26 @@ public class UserService implements UserDetailsService {
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .build();
         user = userRepository.save(user);
+        return userMapper.toDTO(user);
+    }
+
+    public UserDTO login(UserRegistrationDTO dto) {
+        if (dto.getLogin() == null && dto.getEmail() == null) {
+            throw new BadCredentialsException("Не указаны логин и пароль");
+        }
+        User user;
+        if (dto.getLogin() != null) {
+            user = userRepository.findByLogin(dto.getLogin())
+                    .orElseThrow(() -> new BadCredentialsException("Пользователь таким логином не найден"));
+        } else {
+            user = userRepository.findByEmail(dto.getEmail())
+                    .orElseThrow(() -> new BadCredentialsException("Пользователь такой почтой не найден"));
+        }
+
+        Objects.requireNonNull(dto.getPassword(), "Пароль не должен быть пустым полем");
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Неверный пароль");
+        }
         return userMapper.toDTO(user);
     }
 
