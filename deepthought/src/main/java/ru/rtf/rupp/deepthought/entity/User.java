@@ -3,8 +3,12 @@ package ru.rtf.rupp.deepthought.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -15,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "t_user")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue
@@ -58,5 +62,36 @@ public class User {
         this.isRestricted = false;
         this.profile = UserProfile.builder()
                 .build();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        //TODO Маппинг на системные роли
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !isDeleted;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return !isRestricted;
     }
 }
