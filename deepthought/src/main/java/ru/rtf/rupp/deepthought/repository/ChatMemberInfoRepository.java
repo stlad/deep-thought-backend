@@ -13,4 +13,10 @@ public interface ChatMemberInfoRepository extends JpaRepository<ChatMemberInfo, 
     @Query("select cmi from ChatMemberInfo cmi where cmi.chat.title = ?1")
     List<ChatMemberInfo> findAllByChatTitle(String title);
 
+    @Query("select cmi from ChatMemberInfo cmi where cmi.chat.id = ?1")
+    List<ChatMemberInfo> findAllByChatId(UUID id);
+
+    @Query("select cmi from ChatMemberInfo cmi where cmi.chat.id = ?1 AND cmi.user.email = ?2")
+    List<ChatMemberInfo> findByChatIdAndUser(UUID id, String email);
+
 }
