@@ -17,6 +17,7 @@ import ru.rtf.rupp.deepthought.mapper.UserMapper;
 import ru.rtf.rupp.deepthought.repository.UserRepository;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -64,5 +65,13 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByLogin(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
+    }
+
+    public UserDTO getUserByEmail(String userID) {
+        User user = userRepository.findByEmail(userID).orElse(null);
+        if (user == null){
+            throw new EntityExistsException("Такого пользователя нет");
+        }
+        return userMapper.toDTO(user);
     }
 }

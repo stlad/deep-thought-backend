@@ -2,6 +2,7 @@ package ru.rtf.rupp.deepthought.dto;
 
 import java.util.UUID;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,10 +10,10 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class MessageDto {
+public class ChatDTO {
+
     private UUID id;
-    private String text;
-    private UUID chat;
-    private String email; // replace with user id
-    private String postedAt;
+
+    @Schema(description = "Название чата")
+    private String title;
 }
