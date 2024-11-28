@@ -14,4 +14,5 @@ public class MessageDto {
     private String text;
     private UUID chat;
     private String email; // replace with user id
+    private String postedAt;
 }

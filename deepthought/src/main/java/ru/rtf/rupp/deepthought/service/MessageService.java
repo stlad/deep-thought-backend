@@ -17,6 +17,7 @@ import ru.rtf.rupp.deepthought.repository.UserRepository;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -28,7 +29,6 @@ public class MessageService {
 
     @Transactional
     public MessageDto saveMessage(MessageDto dto) {
-
         User user = userRepository.findByEmail(dto.getEmail()).orElse(null);
         if (user == null){
             throw new EntityExistsException("Пользователь не существует ");
@@ -45,7 +45,7 @@ public class MessageService {
                 .content(dto.getText())
                 .build();
         messageRepository.save(message);
-        return dto;
+        return convertToDto(message);
     }
 
     public List<MessageDto> getMessagesFromChat(UUID chatId) {
@@ -68,6 +68,7 @@ public class MessageService {
                         .text(message.getContent())
                         .email(message.getUser().getEmail())
                         .chat(message.getChat().getId())
+                        .postedAt(message.getPostedAt().toString())
                         .build();
         return dto;
     }

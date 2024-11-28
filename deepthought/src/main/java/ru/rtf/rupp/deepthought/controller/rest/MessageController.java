@@ -20,7 +20,7 @@ import ru.rtf.rupp.deepthought.service.MessageService;
 public class MessageController {
     private final MessageService messageService;
 
-    @GetMapping("/all") // TODO: add limit add ofset add datetime for mesasges
+    @GetMapping("/all") // TODO: limit and offset
     @Operation(summary = "Запрос всех сообщений по ID чата")
     public ResponseEntity<List<MessageDto>> createChat(UUID chatId) {
         List<MessageDto> messages = messageService.getMessagesFromChat(chatId);

@@ -20,10 +20,9 @@ public class WSMessageController {
     @MessageMapping("/broker")
     public void process(@Payload MessageDto message) {
         log.info("Сообщение в чат {}", message.toString());
-        // broadcast message to specific chat and save it 
-        messageService.saveMessage(message);
+        MessageDto messageDTO = messageService.saveMessage(message);
         String destination = String.format("/user/messages/%s", message.getChat());
-        messagingTemplate.convertAndSend(destination, message);
+        messagingTemplate.convertAndSend(destination, messageDTO);
 
 
     }

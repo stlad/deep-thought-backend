@@ -69,11 +69,10 @@ public class ChatService {
                             .collect(Collectors.toList());
     }
 
-    public List<UserDTO> getAllChatMembers(UUID id){
+    public List<ChatMemberInfoDTO> getAllChatMembers(UUID id){
         List<ChatMemberInfo> chatMemberInfos = chatMemberInfoRepository.findAllByChatId(id);
         return chatMemberInfos.stream()
-                            .map(ChatMemberInfo::getUser)
-                            .map(userMapper::toDTO)
+                            .map(chatMapper::toDTO)
                             .collect(Collectors.toList());
     }
 
@@ -130,6 +129,25 @@ public class ChatService {
             return true;
         }
         throw new EntityExistsException("Такого пользователя в чате нет");
+    }
+
+    public ChatMemberInfoDTO getMember(UUID chatId, String email){ // only chatAdmin can remove user todo add another DTO remake it
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            throw new EntityExistsException("Пользователь c таким емаилом не существует ");
+        }
+        Chat chat = chatRepository.findById(chatId).orElse(null);
+        if (chat == null) {
+            throw new EntityExistsException("Такой чат не существует невозсожно доабвить пользователя ");
+        }
+
+        List<ChatMemberInfo> chatMemberInfos = chatMemberInfoRepository.findByChatIdAndUser(chatId, email);
+        System.out.println(chatMemberInfos);
+        if (chatMemberInfos.isEmpty()){
+            throw new EntityExistsException("Такого пользователя в чате нет");
+        }
+        System.out.println(chatMemberInfos);
+        return chatMapper.toDTO(chatMemberInfos.get(0));
     }
 
 }

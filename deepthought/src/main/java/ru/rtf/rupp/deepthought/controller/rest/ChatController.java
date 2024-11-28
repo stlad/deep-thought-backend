@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import ru.rtf.rupp.deepthought.dto.ChatDTO;
 import ru.rtf.rupp.deepthought.dto.ChatMemberInfoDTO;
-import ru.rtf.rupp.deepthought.dto.UserDTO;
 import ru.rtf.rupp.deepthought.dto.ChatCreationDTO;
 import ru.rtf.rupp.deepthought.service.ChatService;
 
@@ -40,8 +39,8 @@ public class ChatController {
 
     @GetMapping("/members/all")
     @Operation(summary = "Все пользователи чата")
-    public ResponseEntity<List<UserDTO>> allChatMembers(UUID id) {
-        List<UserDTO> users = chatService.getAllChatMembers(id);
+    public ResponseEntity<List<ChatMemberInfoDTO>> allChatMembers(UUID id) {
+        List<ChatMemberInfoDTO> users = chatService.getAllChatMembers(id);
         return ResponseEntity.ok(users);
    }
 
@@ -64,6 +63,13 @@ public class ChatController {
     public ResponseEntity<Boolean> removeUser(String email, UUID chatID) {
         Boolean removed = chatService.removeUser(email, chatID);
         return ResponseEntity.ok(removed);
+    }
+
+    @GetMapping("/member")
+    @Operation(summary = "Получить состояние пользователя в чате") // используется на фронте мне пока лень передалватпь но алл хватит 
+    public ResponseEntity<ChatMemberInfoDTO> getChatMember(String email, UUID chatID) {
+        ChatMemberInfoDTO chatMember = chatService.getMember(chatID, email);
+        return ResponseEntity.ok(chatMember);
     }
         
 }
