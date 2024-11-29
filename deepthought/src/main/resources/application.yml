@@ -29,3 +29,9 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui.html
+
+javamelody:
+  enabled: true
+  spring-monitoring-enabled: true
+  init-parameters:
+    log: true

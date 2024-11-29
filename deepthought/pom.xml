@@ -23,6 +23,7 @@
         <version.postgres>42.7.4</version.postgres>
         <version.swagger>2.6.0</version.swagger>
         <version.liquibase>4.30.0</version.liquibase>
+        <version.melody>2.3.0</version.melody>
     </properties>
     <dependencies>
         <dependency>
@@ -87,6 +88,11 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>${version.liquibase}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.bull.javamelody</groupId>
+            <artifactId>javamelody-spring-boot-starter</artifactId>
+            <version>${version.melody}</version>
         </dependency>
 
     </dependencies>
