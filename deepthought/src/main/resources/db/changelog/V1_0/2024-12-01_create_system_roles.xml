@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="создание таблицы t_user_role" author="Vaganov.VS">
+        <createTable tableName="t_user_role" remarks="Роли пользователей в системе">
+            <column name="id" type="uuid" remarks="ИД записи о роли пользователя">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="role" type="smallint" remarks="Роль пользователя в системе" defaultValue="2">
+                <constraints nullable="false"/>
+            </column>
+            <column name="link_user" type="uuid" remarks="ИД пользователя"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="t_user_role"
+                                 baseColumnNames="link_user"
+                                 constraintName="user_role__to__user__fk"
+                                 referencedTableName="t_user"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+        />
+    </changeSet>
+</databaseChangeLog>
