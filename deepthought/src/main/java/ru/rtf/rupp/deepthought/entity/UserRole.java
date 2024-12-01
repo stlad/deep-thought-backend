@@ -25,7 +25,7 @@ public class UserRole {
 
     @Convert(converter = SystemRoleAttributeConverter.class)
     @Builder.Default
-    private SystemRole role = SystemRole.ROLE_USER;
+    private SystemRole role = SystemRole.USER;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "link_user", referencedColumnName = "id")

@@ -10,6 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import ru.rtf.rupp.deepthought.enums.SystemRole;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -25,9 +26,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http    
                 .cors(withDefaults())
-                .authorizeHttpRequests((authorize) -> authorize
-
-                        .anyRequest().permitAll()
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/api/v1/auth/login").permitAll()
+                        .requestMatchers("/api/v1/auth/register").permitAll()
+                        .requestMatchers("/api/v1/auth/grant").hasAuthority(SystemRole.ADMIN.toSecurityRole())
+                        .anyRequest().authenticated()
                 ).csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(withDefaults());
 

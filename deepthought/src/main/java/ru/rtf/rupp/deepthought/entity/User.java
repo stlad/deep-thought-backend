@@ -1,6 +1,7 @@
 package ru.rtf.rupp.deepthought.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
@@ -47,7 +48,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserRole> systemRoles;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "link_user_profile", referencedColumnName = "id")
     private UserProfile profile;
 
@@ -64,10 +65,11 @@ public class User implements UserDetails {
                 .build();
     }
 
+    @Transactional
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (systemRoles.isEmpty()) {
-            return List.of(SystemRole.ROLE_USER.toAuthority());
+            return List.of(SystemRole.USER.toAuthority());
         }
         return systemRoles.stream().map(r -> r.getRole().toAuthority()).toList();
     }

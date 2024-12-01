@@ -4,6 +4,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import ru.rtf.rupp.deepthought.dto.UserDTO;
 import ru.rtf.rupp.deepthought.dto.UserRegistrationDTO;
 import ru.rtf.rupp.deepthought.entity.User;
+import ru.rtf.rupp.deepthought.entity.UserRole;
 import ru.rtf.rupp.deepthought.enums.SystemRole;
 import ru.rtf.rupp.deepthought.mapper.UserMapper;
 import ru.rtf.rupp.deepthought.repository.SystemRoleRepository;
@@ -40,7 +42,7 @@ public class UserService implements UserDetailsService {
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .build();
         user = userRepository.save(user);
-        user.addRole(SystemRole.ROLE_USER);
+        systemRoleRepository.save(UserRole.builder().user(user).role(SystemRole.USER).build());
         return userMapper.toDTO(user);
     }
 
@@ -65,9 +67,13 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByLogin(username)
+
+        UserDetails user =  userRepository.findByLogin(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
+        Hibernate.initialize(user.getAuthorities());
+        return user;
     }
 
     public UserDTO getUserByEmail(String userID) {

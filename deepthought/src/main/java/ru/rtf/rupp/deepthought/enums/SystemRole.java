@@ -7,12 +7,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @AllArgsConstructor
 @Getter
 public enum SystemRole {
-    ROLE_USER(1),
-    ROLE_ADMIN(2);
+    USER(1),
+    ADMIN(2);
 
     private final Integer code;
 
     public SimpleGrantedAuthority toAuthority() {
         return new SimpleGrantedAuthority(this.toString());
+    }
+
+    public String toSecurityRole(){
+        return "ROLE_"+this.toString();
     }
 }
