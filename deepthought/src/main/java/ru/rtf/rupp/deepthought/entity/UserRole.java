@@ -13,6 +13,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "t_user_role")
 public class UserRole {
@@ -23,9 +24,10 @@ public class UserRole {
     private UUID id;
 
     @Convert(converter = SystemRoleAttributeConverter.class)
+    @Builder.Default
     private SystemRole role = SystemRole.ROLE_USER;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "link_user", referencedColumnName = "id")
     private User user;
 }

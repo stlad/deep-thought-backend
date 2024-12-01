@@ -6,12 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.rtf.rupp.deepthought.dto.UserDTO;
 import ru.rtf.rupp.deepthought.dto.UserRegistrationDTO;
+import ru.rtf.rupp.deepthought.enums.SystemRole;
 import ru.rtf.rupp.deepthought.service.UserService;
 
 @RestController
@@ -33,6 +31,13 @@ public class AuthController {
     @Operation(summary = "Получение пользователя")
     public ResponseEntity<UserDTO> login(@RequestBody UserRegistrationDTO dto){
         UserDTO user = userService.login(dto);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PostMapping("/grant")
+    @Operation(summary = "Получение пользователя")
+    public ResponseEntity<UserDTO> login(@RequestParam String login, @RequestParam SystemRole role){
+        UserDTO user = userService.grantRole(login, role);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.rtf.rupp.deepthought.enums.SystemRole;
 
@@ -43,7 +42,7 @@ public class User implements UserDetails {
     private Boolean isDeleted;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<ChatMemberInfo> members_info;
+    private List<ChatMemberInfo> memberInfo;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserRole> systemRoles;
@@ -53,7 +52,7 @@ public class User implements UserDetails {
     private UserProfile profile;
 
     @Builder
-    public User(String login, String password, String email){
+    public User(String login, String password, String email) {
         Objects.requireNonNull(login, "Логин является обязательным полем");
         this.login = login;
         this.password = password;
@@ -67,8 +66,10 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //TODO Маппинг на системные роли
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        if (systemRoles.isEmpty()) {
+            return List.of(SystemRole.ROLE_USER.toAuthority());
+        }
+        return systemRoles.stream().map(r -> r.getRole().toAuthority()).toList();
     }
 
     @Override
@@ -94,5 +95,12 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return !isRestricted;
+    }
+
+    public void addRole(SystemRole role) {
+        if (systemRoles == null) {
+            systemRoles = new HashSet<>();
+        }
+        this.getSystemRoles().add(UserRole.builder().user(this).role(role).build());
     }
 }

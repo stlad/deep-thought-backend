@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 import ru.rtf.rupp.deepthought.dto.UserDTO;
 import ru.rtf.rupp.deepthought.dto.UserRegistrationDTO;
 import ru.rtf.rupp.deepthought.entity.User;
+import ru.rtf.rupp.deepthought.enums.SystemRole;
 import ru.rtf.rupp.deepthought.mapper.UserMapper;
+import ru.rtf.rupp.deepthought.repository.SystemRoleRepository;
 import ru.rtf.rupp.deepthought.repository.UserRepository;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -26,6 +27,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final SystemRoleRepository systemRoleRepository;
 
     @Transactional
     public UserDTO saveUser(UserRegistrationDTO dto) {
@@ -38,6 +40,7 @@ public class UserService implements UserDetailsService {
                 .password(passwordEncoder.encode(dto.getPassword()))
                 .build();
         user = userRepository.save(user);
+        user.addRole(SystemRole.ROLE_USER);
         return userMapper.toDTO(user);
     }
 
@@ -69,9 +72,22 @@ public class UserService implements UserDetailsService {
 
     public UserDTO getUserByEmail(String userID) {
         User user = userRepository.findByEmail(userID).orElse(null);
-        if (user == null){
+        if (user == null) {
             throw new EntityExistsException("Такого пользователя нет");
         }
+        return userMapper.toDTO(user);
+    }
+
+    @Transactional
+    public UserDTO grantRole(String login, SystemRole role) {
+        User user = userRepository.findByLogin(login)
+                .orElseThrow(() -> new BadCredentialsException("Пользователь таким логином не найден"));
+        if (systemRoleRepository.existsByUser_LoginAndRole(login, role)) {
+            return userMapper.toDTO(user);
+        }
+
+        user.addRole(role);
+        userRepository.save(user);
         return userMapper.toDTO(user);
     }
 }

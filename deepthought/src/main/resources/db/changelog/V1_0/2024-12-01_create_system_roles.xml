@@ -8,7 +8,8 @@
             <column name="id" type="uuid" remarks="ИД записи о роли пользователя">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="role" type="smallint" remarks="Роль пользователя в системе" defaultValue="2">
+            <column name="role" type="int" remarks="Роль пользователя в системе: 1-ROLE_USER, 2-ROLE_ADMIN"
+                    defaultValue="1">
                 <constraints nullable="false"/>
             </column>
             <column name="link_user" type="uuid" remarks="ИД пользователя"/>

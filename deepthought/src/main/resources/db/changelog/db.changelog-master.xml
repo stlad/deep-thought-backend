@@ -7,4 +7,5 @@
 
     <include file="/db/changelog/V1_0/2024-11-16_create_user_tables.xml" />
     <include file="/db/changelog/V1_0/2024-11-17_create_chat_tables.xml" />
+    <include file="/db/changelog/V1_0/2024-12-01_create_system_roles.xml" />
 </databaseChangeLog>

@@ -7,7 +7,7 @@ import ru.rtf.rupp.deepthought.entity.User;
 import ru.rtf.rupp.deepthought.entity.UserProfile;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper {
+public interface UserMapper extends BaseMapper {
 
     UserProfileDTO toDTO(UserProfile entity);
 
