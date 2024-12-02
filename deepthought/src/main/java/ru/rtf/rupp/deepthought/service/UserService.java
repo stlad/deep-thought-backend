@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +23,7 @@ import ru.rtf.rupp.deepthought.repository.SystemRoleRepository;
 import ru.rtf.rupp.deepthought.repository.UserRepository;
 
 import java.util.Objects;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -40,30 +43,44 @@ public class UserService implements UserDetailsService {
                 .email(dto.getEmail())
                 .login(dto.getLogin())
                 .password(passwordEncoder.encode(dto.getPassword()))
+                .systemRoles(Set.of(UserRole.builder().role(SystemRole.USER).build()))
                 .build();
         user = userRepository.save(user);
-        systemRoleRepository.save(UserRole.builder().user(user).role(SystemRole.USER).build());
         return userMapper.toDTO(user);
     }
 
-    public UserDTO login(UserRegistrationDTO dto) {
-        if (dto.getLogin() == null && dto.getEmail() == null) {
+    public UserDTO findUser(String login, String email) {
+        if (login == null && email == null) {
             throw new BadCredentialsException("Не указаны логин и пароль");
         }
         User user;
-        if (dto.getLogin() != null) {
-            user = userRepository.findByLogin(dto.getLogin())
+        if (login != null) {
+            user = userRepository.findByLogin(login)
                     .orElseThrow(() -> new BadCredentialsException("Пользователь таким логином не найден"));
         } else {
-            user = userRepository.findByEmail(dto.getEmail())
+            user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new BadCredentialsException("Пользователь такой почтой не найден"));
+        }
+        return userMapper.toDTO(user);
+    }
+
+    public Authentication login(UserRegistrationDTO dto) {
+        if (dto.getLogin() == null && dto.getEmail() == null) {
+            throw new BadCredentialsException("Не указаны логин и пароль");
+        }
+        UserDetails user;
+        if (dto.getLogin() != null) {
+            user = loadUserByUsername(dto.getLogin());
+        } else {
+            user = loadUserByUsername(dto.getEmail());
         }
 
         Objects.requireNonNull(dto.getPassword(), "Пароль не должен быть пустым полем");
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Неверный пароль");
         }
-        return userMapper.toDTO(user);
+
+        return new UsernamePasswordAuthenticationToken(userMapper.toDTO((User) user), dto.getPassword(), user.getAuthorities());
     }
 
     @Override
@@ -92,7 +109,6 @@ public class UserService implements UserDetailsService {
             return userMapper.toDTO(user);
         }
 
-        user.addRole(role);
         userRepository.save(user);
         return userMapper.toDTO(user);
     }

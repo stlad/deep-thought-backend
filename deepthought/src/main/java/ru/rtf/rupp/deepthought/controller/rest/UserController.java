@@ -1,6 +1,7 @@
 package ru.rtf.rupp.deepthought.controller.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,6 +17,7 @@ import ru.rtf.rupp.deepthought.service.UserService;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
+@SecurityRequirement(name = "basicAuth")
 public class UserController {
 
     private final UserService userService;

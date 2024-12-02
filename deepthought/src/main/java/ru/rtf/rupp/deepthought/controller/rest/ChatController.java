@@ -3,6 +3,7 @@ package ru.rtf.rupp.deepthought.controller.rest;
 import java.util.List;
 import java.util.UUID;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,6 +20,7 @@ import ru.rtf.rupp.deepthought.service.ChatService;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/chat")
+@SecurityRequirement(name = "basicAuth")
 public class ChatController {
     
     private final ChatService chatService;

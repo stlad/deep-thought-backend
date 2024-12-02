@@ -45,15 +45,15 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ChatMemberInfo> memberInfo;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<UserRole> systemRoles;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "link_user_profile", referencedColumnName = "id")
     private UserProfile profile;
 
     @Builder
-    public User(String login, String password, String email) {
+    public User(String login, String password, String email, Set<UserRole> systemRoles) {
         Objects.requireNonNull(login, "Логин является обязательным полем");
         this.login = login;
         this.password = password;
@@ -63,6 +63,7 @@ public class User implements UserDetails {
         this.isRestricted = false;
         this.profile = UserProfile.builder()
                 .build();
+        this.systemRoles = systemRoles;
     }
 
     @Transactional
@@ -97,12 +98,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return !isRestricted;
-    }
-
-    public void addRole(SystemRole role) {
-        if (systemRoles == null) {
-            systemRoles = new HashSet<>();
-        }
-        this.getSystemRoles().add(UserRole.builder().user(this).role(role).build());
     }
 }
