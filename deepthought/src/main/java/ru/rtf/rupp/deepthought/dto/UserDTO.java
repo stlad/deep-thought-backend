@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.rtf.rupp.deepthought.enums.SystemRole;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -34,4 +36,7 @@ public class UserDTO {
 
     @Schema(description = "Флаг удаленности")
     private Boolean isDeleted;
+
+    @Schema(description = "Системные роли")
+    private Set<SystemRole> systemRoles;
 }

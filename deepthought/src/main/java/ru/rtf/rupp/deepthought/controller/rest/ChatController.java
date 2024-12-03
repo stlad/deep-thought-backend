@@ -3,6 +3,7 @@ package ru.rtf.rupp.deepthought.controller.rest;
 import java.util.List;
 import java.util.UUID;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
