@@ -20,7 +20,6 @@ import ru.rtf.rupp.deepthought.service.ChatService;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/chat")
-@SecurityRequirement(name = "basicAuth")
 public class ChatController {
     
     private final ChatService chatService;

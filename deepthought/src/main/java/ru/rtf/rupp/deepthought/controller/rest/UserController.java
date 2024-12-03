@@ -17,16 +17,15 @@ import ru.rtf.rupp.deepthought.service.UserService;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
-@SecurityRequirement(name = "basicAuth")
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping("/find")
     @Operation(summary = "Получение пользователя")
-    public ResponseEntity<UserDTO> getUser(String email){
+    public ResponseEntity<UserDTO> getUser(String email) {
         UserDTO user = userService.getUserByEmail(email);
-        System.out.println(user.getEmail());
+        log.debug("Найден пользователь с email: {}", user.getEmail());
         return ResponseEntity.ok(user);
     }
 
