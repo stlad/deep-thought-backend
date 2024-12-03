@@ -1,5 +1,8 @@
 package ru.rtf.rupp.deepthought.service;
 
+import org.hibernate.Hibernate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +19,6 @@ import ru.rtf.rupp.deepthought.entity.User;
 import ru.rtf.rupp.deepthought.entity.UserRole;
 import ru.rtf.rupp.deepthought.enums.SystemRole;
 import ru.rtf.rupp.deepthought.entity.UserProfile;
-
 import ru.rtf.rupp.deepthought.mapper.UserMapper;
 import ru.rtf.rupp.deepthought.repository.SystemRoleRepository;
 import ru.rtf.rupp.deepthought.repository.UserProfileRepository;
