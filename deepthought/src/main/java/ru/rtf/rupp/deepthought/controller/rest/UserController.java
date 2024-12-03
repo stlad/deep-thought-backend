@@ -1,6 +1,7 @@
 package ru.rtf.rupp.deepthought.controller.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,9 +23,9 @@ public class UserController {
 
     @GetMapping("/find")
     @Operation(summary = "Получение пользователя")
-    public ResponseEntity<UserDTO> getUser(String email){
+    public ResponseEntity<UserDTO> getUser(String email) {
         UserDTO user = userService.getUserByEmail(email);
-        System.out.println(user.getEmail());
+        log.debug("Найден пользователь с email: {}", user.getEmail());
         return ResponseEntity.ok(user);
     }
 

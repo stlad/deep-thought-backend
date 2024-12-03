@@ -1,17 +1,15 @@
 package ru.rtf.rupp.deepthought.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.rtf.rupp.deepthought.enums.SystemRole;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -45,14 +43,17 @@ public class User implements UserDetails {
     private Boolean isDeleted;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<ChatMemberInfo> members_info;
+    private List<ChatMemberInfo> memberInfo;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<UserRole> systemRoles;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "link_user_profile", referencedColumnName = "id")
     private UserProfile profile;
 
     @Builder
-    public User(String login, String password, String email){
+    public User(String login, String password, String email, Set<UserRole> systemRoles) {
         Objects.requireNonNull(login, "Логин является обязательным полем");
         this.login = login;
         this.password = password;
@@ -62,12 +63,16 @@ public class User implements UserDetails {
         this.isRestricted = false;
         this.profile = UserProfile.builder()
                 .build();
+        this.systemRoles = systemRoles;
     }
 
+    @Transactional
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //TODO Маппинг на системные роли
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        if (systemRoles.isEmpty()) {
+            return List.of(SystemRole.USER.toAuthority());
+        }
+        return systemRoles.stream().map(r -> r.getRole().toAuthority()).toList();
     }
 
     @Override

@@ -7,7 +7,7 @@ import ru.rtf.rupp.deepthought.entity.Chat;
 import ru.rtf.rupp.deepthought.entity.ChatMemberInfo;
 
 @Mapper(componentModel = "spring")
-public interface ChatMapper {
+public interface ChatMapper extends BaseMapper {
 
     ChatDTO toDTO(Chat entity);
 
