@@ -24,6 +24,5 @@ public class WSMessageController {
         String destination = String.format("/user/messages/%s", message.getChat());
         messagingTemplate.convertAndSend(destination, messageDTO);
 
-
     }
 }

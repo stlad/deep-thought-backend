@@ -1,13 +1,13 @@
 package ru.rtf.rupp.deepthought.service;
 
+import org.hibernate.Hibernate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,8 +18,10 @@ import ru.rtf.rupp.deepthought.dto.UserRegistrationDTO;
 import ru.rtf.rupp.deepthought.entity.User;
 import ru.rtf.rupp.deepthought.entity.UserRole;
 import ru.rtf.rupp.deepthought.enums.SystemRole;
+import ru.rtf.rupp.deepthought.entity.UserProfile;
 import ru.rtf.rupp.deepthought.mapper.UserMapper;
 import ru.rtf.rupp.deepthought.repository.SystemRoleRepository;
+import ru.rtf.rupp.deepthought.repository.UserProfileRepository;
 import ru.rtf.rupp.deepthought.repository.UserRepository;
 
 import java.util.Objects;
@@ -30,6 +32,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final UserProfileRepository userProfileRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final SystemRoleRepository systemRoleRepository;
@@ -112,4 +115,19 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
         return userMapper.toDTO(user);
     }
+
+    @Transactional
+    public UserDTO updateProfile(UserDTO dto) {
+        User user = userRepository.findByEmail(dto.getEmail()).orElse(null);
+        if (user == null) {
+            throw new EntityExistsException("Пользователь не существует");
+        }
+        UserProfile updatedProfile = userMapper.toEntity(dto.getProfile());
+        user.setProfile(updatedProfile);
+        userProfileRepository.save(updatedProfile);
+        userRepository.save(user);
+
+        return userMapper.toDTO(user);
+    }
+
 }

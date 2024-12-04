@@ -13,4 +13,8 @@ public interface UserMapper extends BaseMapper {
 
     UserDTO toDTO(User entity);
 
+    User toEntity(UserDTO dto);
+
+    UserProfile toEntity(UserProfileDTO dto);
+
 }
