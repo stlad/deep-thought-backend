@@ -1,4 +1,4 @@
-package ru.rtf.rupp.deepthought;
+package ru.rtf.rupp.deepthought.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
